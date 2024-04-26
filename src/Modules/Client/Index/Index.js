@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
-import FoodImage from "../../assets/Homepage.jpeg";
+import FoodImage from "../../../assets/Homepage.jpeg";
+import Details from "../details/Details";
 
 function Index() {
   const foodCategories = ["Appetizers", "Main Course", "Desserts", "Drinks"];
@@ -51,9 +52,7 @@ function Index() {
       ></div>
       <div className="content">
         {selectedCategory ? (
-          <div>
-            <h2>{selectedCategory}</h2>
-          </div>
+          <Details categoryName={selectedCategory} />
         ) : (
           <div className="default-div">
             <img src={FoodImage} alt="Food" />
