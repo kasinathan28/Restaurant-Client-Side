@@ -7,6 +7,7 @@ function Index() {
   const foodCategories = ["Appetizers", "Main Course", "Desserts", "Drinks"];
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -52,7 +53,7 @@ function Index() {
       ></div>
       <div className="content">
         {selectedCategory ? (
-          <Details categoryName={selectedCategory} />
+          <Details categoryName={selectedCategory} setTotalPrice={setTotalPrice} />
         ) : (
           <div className="default-div">
             <img src={FoodImage} alt="Food" />
@@ -62,6 +63,7 @@ function Index() {
           </div>
         )}
       </div>
+    
     </div>
   );
 }

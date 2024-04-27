@@ -15,12 +15,13 @@
 }
 
 .app-container {
-  background-image: url('../../../assets/Homepage.jpeg'); 
+  background-image: url('../../../assets/Homepage.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
 }
+
 
 .hamburger {
   display: none;
@@ -153,4 +154,37 @@
 
 .category-item:focus {
   outline: none;
+}
+
+.total {
+  width: 100%;
+  background: #fff;
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  gap: 60px;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.total h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.total button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.total button:hover {
+  background-color: #0056b3;
 }
