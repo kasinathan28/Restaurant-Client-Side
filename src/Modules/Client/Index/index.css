@@ -1,5 +1,6 @@
 .Navbar {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background-color: #333;
@@ -11,6 +12,14 @@
 .Navbar h1 {
   margin: 0;
   font-size: 20px;
+}
+
+.app-container {
+  background-image: url('../../../assets/Homepage.jpeg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .hamburger {

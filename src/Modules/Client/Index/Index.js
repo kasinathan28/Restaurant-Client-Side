@@ -18,7 +18,7 @@ function Index() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <div className="Navbar">
         <div
           className={`hamburger ${sidebarOpen ? "open" : ""}`}

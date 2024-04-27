@@ -1,33 +1,53 @@
-import React, { useState } from 'react';
-import './Details.css'; // Import your CSS file
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Details.css";
+import { BASEURL, IMAGEURL } from "../../../url/BASEURL";
 
 function Details({ categoryName }) {
-  const [quantity, setQuantity] = useState(0);
+  const [foods, setFoods] = useState([]);
 
-  const handleIncrement = () => {
-    setQuantity(quantity + 1);
-  };
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const response = await axios.get(`${BASEURL}/getFoods`);
+        setFoods(response.data);
+      } catch (error) {
+        console.error("Error fetching foods:", error);
+      }
+    };
 
-  const handleDecrement = () => {
-    if (quantity > 0) {
-      setQuantity(quantity - 1);
-    }
-  };
+    fetchFoods();
+  }, []);
 
-  const handleBuy = () => {
-    console.log(`Buy ${quantity} ${categoryName}`);
-  };
+  // Filter foods based on the category name
+  const filteredFoods = foods.filter((food) => food.category === categoryName);
 
   return (
-    <div className="card">
-      <div className="details-container">
-        <h2>{categoryName}</h2>
-        <div className="quantity-control">
-          <button onClick={handleDecrement}>-</button>
-          <span>{quantity}</span>
-          <button onClick={handleIncrement}>+</button>
-        </div>
-        <button className="buy-button" onClick={handleBuy}>Buy</button>
+    <div className="details-container">
+      <h2>{categoryName}</h2>
+      <div className="food-cards-container">
+        {filteredFoods.map((food) => (
+          <div key={food._id} className="food-card">
+            <div className="flex">
+              <div className="food-info">
+                <h3>{food.name}</h3>
+                <p>{food.description}</p>
+                <p>Price: ${food.price}</p>
+              </div>
+
+              <div className="food-image">
+                <img src={`${IMAGEURL}/${food.image}`} alt={food.name} />
+              </div>
+            </div>
+            <div className="quantity-buy">
+              <div className="quantity-control">
+                <button>-</button>
+                <span>1</span> <button>+</button>
+              </div>
+              <button className="buy-button">Buy</button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
