@@ -13,6 +13,7 @@ function Index() {
     setSidebarOpen(!sidebarOpen);
   };
 
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setSidebarOpen(false);

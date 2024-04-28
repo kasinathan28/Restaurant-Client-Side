@@ -1,16 +1,84 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Homapage from "../../../assets/Homepage.jpeg";
 import "./OrderDetails.css";
 import SocketComponent from "../../../socketio/Socketio";
-
+import axios from "axios";
+import { BASEURL } from "../../../url/BASEURL";
+import loadRazorpayScript from "../../../components/Razorpay";
 
 function OrderDetails() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
   const order = state ? state.order : null;
+  const orderId = state ? state.orderId : null;
+  const [orderStatus, setOrderStatus] = useState("");
+  const [foodStatus, setFoodStatus] = useState("");
+  const [rzPaymentId, setRzPaymentId] = useState("");
 
-  console.log(order);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BASEURL}/orderstatus/${orderId}`);
+        setFoodStatus(response.data.status);
+      } catch (error) {
+        console.error("Error fetching food status:", error);
+      }
+    };
+
+    fetchData();
+  }, [orderId]);
+
+  const handleOrderStatusUpdated = (status) => {
+    setOrderStatus(status);
+  };
+
+  const initializePayment = async () => {
+    try {
+      const response = await axios.post(`${BASEURL}/payment`, {
+        orderId: orderId,
+        amount: order.totalAmount,
+      });
+
+      setRzPaymentId(response.data.paymentId);
+
+      if (window.Razorpay) {
+        const options = {
+          key: "rzp_test_VUZ8A8Z6vALwLL",
+          amount: order.totalAmount * 100,
+          currency: "INR",
+          name: "Food and Bev Station",
+          description: "Payment for order",
+          order_id: response.data.orderId,
+          handler: function (response) {
+            console.log("Payment successful:", response);
+            navigate("/success");
+          },
+        };
+        const rzPay = new window.Razorpay(options);
+        rzPay.open();
+      } else {
+        console.error("Razorpay SDK not available.");
+      }
+    } catch (error) {
+      console.error("Error initializing payment:", error);
+    }
+  };
+
+  useEffect(() => {
+    const loadRazorpay = async () => {
+      try {
+        await loadRazorpayScript();
+        console.log("Razorpay script loaded successfully.");
+      } catch (error) {
+        console.error("Error loading Razorpay script:", error);
+      }
+    };
+
+    loadRazorpay();
+  }, []);
+
 
   return (
     <div className="ORD">
@@ -41,14 +109,30 @@ function OrderDetails() {
             ) : (
               <p className="no-items">No items found.</p>
             )}
-            <p className="total-amount">Total Amount: {order.totalAmount}</p>
+            <p className="total-amount">
+              Total Amount: {order.totalAmount}
+            </p>
+            {(orderStatus === "delivered" || foodStatus === "delivered") && (
+              <button className="pay-now-button" onClick={initializePayment}>
+                Pay Now
+              </button>
+            )}
+            {!(orderStatus === "delivered" || foodStatus === "delivered") && (
+              <div>
+                <p className="waiting-message">
+                  Waiting for the delivery of the food...
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <p className="no-items">No order details found.</p>
         )}
       </div>
-
-      <SocketComponent/>
+      <SocketComponent
+        orderId={orderId}
+        onOrderStatusUpdated={handleOrderStatusUpdated}
+      />
     </div>
   );
 }

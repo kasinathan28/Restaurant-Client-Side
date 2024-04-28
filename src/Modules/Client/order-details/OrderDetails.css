@@ -45,3 +45,16 @@
   p.total-amount {
     margin-top: 10px;
   }
+
+  .pay-now-button{
+    padding: 10px;
+    border-radius: 8px;
+    background: #888;
+    border: none;
+    transition: 0.3s ease all;
+  }
+
+  .pay-now-button:hover{
+    transform: scale(1.02);
+    background-color: #757474;
+  }

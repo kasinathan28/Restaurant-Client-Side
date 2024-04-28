@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../url/BASEURL';
 
-const SocketComponent = () => {
+const SocketComponent = ({ orderId, onOrderStatusUpdated }) => {
   const [orderStatus, setOrderStatus] = useState('');
 
   useEffect(() => {
@@ -16,24 +16,20 @@ const SocketComponent = () => {
       console.log('Disconnected from server.');
     });
 
-    socket.on('orderStatusUpdated', ({ orderId, status }) => {
-      console.log('Order status updated:', orderId, status);
-      if (orderId === "662d33ecb251bb7a7202e0a9") {
+    socket.on('orderStatusUpdated', ({ orderId: updatedOrderId, status }) => {
+      console.log('Order status updated:', updatedOrderId, status);
+      if (updatedOrderId === orderId) {
         setOrderStatus(status);
+        onOrderStatusUpdated(status);
       }
     });
 
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [orderId, onOrderStatusUpdated]);
 
-  return (
-    <div>
-      <p>Socket Connection</p>
-      {orderStatus && <p>Order status updated: {orderStatus}</p>}
-    </div>
-  );
+
 };
 
 export default SocketComponent;

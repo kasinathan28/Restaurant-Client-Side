@@ -94,6 +94,7 @@ function Details({ categoryName, setTotalPrice }) {
     setShowPopup(false);
   };
 
+
   const handleOrderNow = async () => {
     try {
       const response = await axios.post(`${BASEURL}/order`, {
@@ -104,10 +105,11 @@ function Details({ categoryName, setTotalPrice }) {
           totalPrice: item.price * item.quantity,
         })),
       });
-
-      console.log("Order submitted successfully:", response.data);
-
+  
+      console.log("Order submitted successfully:", response.data._id);
+  
       const orderDetails = {
+        orderId: response.data._id, // Add order ID to order details
         tableNumber: tableNumber,
         cartItems: cartItems.map((item) => ({
           foodName: item.name,
@@ -116,20 +118,20 @@ function Details({ categoryName, setTotalPrice }) {
         })),
         totalAmount: totalPrice // Calculate total amount
       };
-
-
-      // Clear cart after successful purchase
+  
+      console.log("order details from the order page111:", orderDetails);
       setCartItems([]);
       // Close the popup
       setShowPopup(false);
-
-      // Pass the order details to the order-details page as state
-      navigate('/order-details', { state: { order: orderDetails } });
+  
+      // Pass the order details and order ID to the order-details page as state
+      navigate('/order-details', { state: { order: orderDetails, orderId: response.data._id } });
     } catch (error) {
       console.error("Error submitting order:", error);
       // Optionally, display an error message to the user
     }
   };
+  
 
   return (
     <div className="details-container">
