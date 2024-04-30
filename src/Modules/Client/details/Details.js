@@ -4,7 +4,6 @@ import { BASEURL, IMAGEURL } from "../../../url/BASEURL";
 import { useNavigate } from "react-router-dom";
 import "./Details.css";
 
-
 function Details({ categoryName, setTotalPrice }) {
   const [foods, setFoods] = useState([]);
   const [quantities, setQuantities] = useState({});
@@ -94,7 +93,6 @@ function Details({ categoryName, setTotalPrice }) {
     setShowPopup(false);
   };
 
-
   const handleOrderNow = async () => {
     try {
       const response = await axios.post(`${BASEURL}/order`, {
@@ -105,33 +103,31 @@ function Details({ categoryName, setTotalPrice }) {
           totalPrice: item.price * item.quantity,
         })),
       });
-  
-      console.log("Order submitted successfully:", response.data._id);
-  
+
+      
       const orderDetails = {
         orderId: response.data._id, // Add order ID to order details
         tableNumber: tableNumber,
         cartItems: cartItems.map((item) => ({
           foodName: item.name,
           quantity: item.quantity,
-          totalPrice: item.price * item.quantity // Calculate total price per item
+          totalPrice: item.price * item.quantity,
         })),
-        totalAmount: totalPrice // Calculate total amount
+        totalAmount: totalPrice, // Calculate total amount
       };
-  
-      console.log("order details from the order page111:", orderDetails);
+
       setCartItems([]);
       // Close the popup
       setShowPopup(false);
-  
+
       // Pass the order details and order ID to the order-details page as state
-      navigate('/order-details', { state: { order: orderDetails, orderId: response.data._id } });
+      navigate("/order-details", {
+        state: { order: orderDetails, orderId: response.data._id },
+      });
     } catch (error) {
       console.error("Error submitting order:", error);
-      // Optionally, display an error message to the user
     }
   };
-  
 
   return (
     <div className="details-container">

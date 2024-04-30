@@ -52,8 +52,7 @@ function OrderDetails() {
           description: "Payment for order",
           order_id: response.data.orderId,
           handler: function (response) {
-            console.log("Payment successful:", response);
-            navigate("/success");
+            navigate(`/success/${response.razorpay_payment_id}/${orderId}`);
           },
         };
         const rzPay = new window.Razorpay(options);

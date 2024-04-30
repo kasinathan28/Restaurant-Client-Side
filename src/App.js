@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index/>} />
         <Route path="/order-details" element={<OrderDetails/>} />
-        <Route path='/success' element={<PaymentSuccess/>}/>
+        <Route path='/success/:razorpayId/:orderId' element={<PaymentSuccess/>}/>
       </Routes>
     </BrowserRouter>
   );
