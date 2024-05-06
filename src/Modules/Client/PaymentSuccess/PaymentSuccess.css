@@ -52,3 +52,31 @@
 .home-button:hover {
   background-color: #0056b3;
 }
+
+
+.feedback-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.feedback-container textarea {
+  width: 90%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.feedback-container button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.feedback-container button:hover {
+  background-color: #218838;
+}

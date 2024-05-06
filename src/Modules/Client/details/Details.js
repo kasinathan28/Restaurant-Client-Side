@@ -17,7 +17,6 @@ function Details({ categoryName, setTotalPrice }) {
       try {
         const response = await axios.get(`${BASEURL}/getFoods`);
         setFoods(response.data);
-        // Initialize quantities state with default value 0 for each food
         const initialQuantities = {};
         response.data.forEach((food) => {
           initialQuantities[food._id] = 0;
@@ -104,16 +103,17 @@ function Details({ categoryName, setTotalPrice }) {
         })),
       });
 
-      
       const orderDetails = {
-        orderId: response.data._id, // Add order ID to order details
+        orderId: response.data._id,
         tableNumber: tableNumber,
         cartItems: cartItems.map((item) => ({
           foodName: item.name,
           quantity: item.quantity,
           totalPrice: item.price * item.quantity,
+          protein: item.protein, // Adding protein field to order details
+          calories: item.calories, // Adding calories field to order details
         })),
-        totalAmount: totalPrice, // Calculate total amount
+        totalAmount: totalPrice,
       };
 
       setCartItems([]);
@@ -140,6 +140,8 @@ function Details({ categoryName, setTotalPrice }) {
                 <h3>{food.name}</h3>
                 <p>{food.description}</p>
                 <p>Price: {food.price}/-</p>
+                <p>Protein: {food.protein}g</p> {/* Display protein */}
+                <p>Calories: {food.calories}</p> {/* Display calories */}
               </div>
 
               <div className="food-image">
