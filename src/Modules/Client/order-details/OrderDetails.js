@@ -16,19 +16,39 @@ function OrderDetails() {
   const [orderStatus, setOrderStatus] = useState("");
   const [foodStatus, setFoodStatus] = useState("");
   const [rzPaymentId, setRzPaymentId] = useState("");
+  const [remainingTime, setRemainingTime] = useState(null);
+  const [timerFinished, setTimerFinished] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${BASEURL}/orderstatus/${orderId}`);
         setFoodStatus(response.data.status);
+        // Calculate remaining time based on the number of food items
+        const timeNeeded = order.cartItems.length * 2 * 5; // 2 minutes per food item
+        setRemainingTime(timeNeeded);
       } catch (error) {
         console.error("Error fetching food status:", error);
       }
     };
 
     fetchData();
-  }, [orderId]);
+  }, [orderId, order.cartItems]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime(prevTime => {
+        if (prevTime <= 0) {
+          setTimerFinished(true);
+          clearInterval(timer);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [remainingTime]);
 
   const handleOrderStatusUpdated = (status) => {
     setOrderStatus(status);
@@ -78,7 +98,6 @@ function OrderDetails() {
     loadRazorpay();
   }, []);
 
-
   return (
     <div className="ORD">
       <div className="Navbar">
@@ -116,11 +135,19 @@ function OrderDetails() {
                 Pay Now
               </button>
             )}
-            {!(orderStatus === "delivered" || foodStatus === "delivered") && (
+            {!timerFinished && (
               <div>
                 <p className="waiting-message">
-                  Waiting for the delivery of the food...
+                  Waiting for the delivery of the food... <br />
+                  Time Remaining: {remainingTime} seconds
                 </p>
+              </div>
+            )}
+            {timerFinished && (
+              <div>
+                <button className="pay-now-button" onClick={initializePayment}>
+                  Pay Now
+                </button>
               </div>
             )}
           </div>
